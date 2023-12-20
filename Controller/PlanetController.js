@@ -11,31 +11,43 @@ module.exports = {
     }
   },
   async index(req, res) {
-    const planets = await Planet.findAll();
-    return res.json(planets);
+    try {
+      const planets = await Planet.findAll();
+      return res.json(planets);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
   },
   async put(req, res) {
     const { name, size, position } = req.body;
-    await Planet.update(
-      {
-        name,
-        size,
-        position,
-      },
-      {
+    try {
+      await Planet.update(
+        {
+          name,
+          size,
+          position,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+      return res.send("Planeta atualizado com sucesso!");
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  },
+  async delete(req, res) {
+    try {
+      await Planet.destroy({
         where: {
           id: req.params.id,
         },
-      }
-    );
-    return res.send("Planeta atualizado com sucesso!");
-  },
-  async delete(req, res) {
-    await Planet.destroy({
-      where: {
-        id: req.params.id,
-      },
-    });
-    res.send("Sucesso! Planeta excluído com sucesso!");
+      });
+      res.send("Sucesso! Planeta excluído com sucesso!");
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
   },
 };
