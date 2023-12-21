@@ -6,9 +6,7 @@ module.exports = {
     const { planetId } = req.params;
     const { name, serialNumber } = req.body;
     try {
-      const planet = await Planet.findByPk(planetId, {
-        include: "satelites",
-      });
+      const planet = await Planet.findByPk(planetId);
       if (!planet) {
         res.send("Esse planeta não existe");
       }
@@ -25,7 +23,7 @@ module.exports = {
         res.send("Esse planeta não existe!");
       }
       const planet = await Planet.findByPk(planetId, {
-        include: Satellite,
+        include: "satelites",
       });
       return res.send(json);
     } catch (error) {
